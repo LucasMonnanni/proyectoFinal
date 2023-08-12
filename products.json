@@ -1,0 +1,112 @@
+[
+    {
+        "id": 0,
+        "title": "Prueba 0",
+        "description": "Producto de prueba 0",
+        "price": 1000,
+        "thumbnails": [],
+        "code": "a514",
+        "category": "testCat1",
+        "status": true,
+        "stock": 50
+    },
+    {
+        "id": 1,
+        "title": "Prueba 1",
+        "description": "Producto de prueba 1",
+        "price": 2000,
+        "thumbnails": [],
+        "code": "b531",
+        "category": "testCat1",
+        "status": true,
+        "stock": 52
+    },
+    {
+        "id": 2,
+        "title": "Prueba 2",
+        "description": "Producto de prueba 2",
+        "price": 3000,
+        "thumbnails": [],
+        "code": "c548",
+        "category": "testCat1",
+        "status": true,
+        "stock": 24
+    },
+    {
+        "id": 3,
+        "title": "Prueba 3",
+        "description": "Producto de prueba 3",
+        "price": 4000,
+        "thumbnails": [],
+        "code": "d565",
+        "category": "testCat1",
+        "status": true,
+        "stock": 56
+    },
+    {
+        "id": 4,
+        "title": "Prueba 4",
+        "description": "Producto de prueba 4",
+        "price": 5000,
+        "thumbnails": [],
+        "code": "j582",
+        "category": "testCat1",
+        "status": true,
+        "stock": 58
+    },
+    {
+        "id": 5,
+        "title": "Prueba 5",
+        "description": "Producto de prueba 5",
+        "price": 6000,
+        "thumbnails": [],
+        "code": "p599",
+        "category": "testCat2",
+        "status": true,
+        "stock": 60
+    },
+    {
+        "id": 6,
+        "title": "Prueba 6",
+        "description": "Producto de prueba 6",
+        "price": 7000,
+        "thumbnails": [],
+        "code": "s616",
+        "category": "testCat2",
+        "status": true,
+        "stock": 62
+    },
+    {
+        "id": 7,
+        "title": "Prueba 7",
+        "description": "Producto de prueba 7",
+        "price": 8000,
+        "thumbnails": [],
+        "code": "e633",
+        "category": "testCat2",
+        "status": true,
+        "stock": 64
+    },
+    {
+        "id": 8,
+        "title": "Prueba 8",
+        "description": "Producto de prueba 8",
+        "price": 9000,
+        "thumbnails": [],
+        "code": "n650",
+        "category": "testCat3",
+        "status": true,
+        "stock": 66
+    },
+    {
+        "id": 9,
+        "title": "Prueba 9",
+        "description": "Producto de prueba 9",
+        "price": 10000,
+        "thumbnails": [],
+        "category": "testCat3",
+        "status": true,
+        "code": "f667",
+        "stock": 68
+    }
+]
