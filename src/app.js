@@ -1,5 +1,5 @@
 import express from 'express';
-import productsRouter from './routes/products.js';
+import { router as productsRouter } from './routes/products.js';
 import cartsRouter from './routes/carts.js';
 import { resolve } from 'path';
 

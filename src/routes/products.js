@@ -3,10 +3,10 @@ import { ProductManager, ProductError } from '../managers/products.js';
 import { resolve } from 'path';
 import { uploader } from '../utils.js';
 
-const router = Router();
+export const router = Router();
 
 const path = resolve('./products.json')
-const pm = new ProductManager(path)
+export const pm = new ProductManager(path)
 
 router.get('/', async (req, res) => {
     let products = await pm.getProducts()
@@ -27,6 +27,7 @@ router.get('/:pid', async (req, res) => {
         if (error instanceof ProductError) {
             res.status(error.code).send({ status: 'error', error: error.message })
         } else {
+            console.log(error)
             res.status(500).send()
         }
     }
@@ -44,6 +45,7 @@ router.post('/', uploader.array('thumbnails'), async (req, res) => {
         if (error instanceof ProductError) {
             res.status(error.code).send({ status: 'error', error: error.message })
         } else {
+            console.log(error)
             res.status(500).send()
         }
     }
@@ -63,6 +65,7 @@ router.put('/:pid', uploader.array('thumbnails'), async (req, res) => {
         if (error instanceof ProductError) {
             res.status(error.code).send({ status: 'error', error: error.message })
         } else {
+            console.log(error)
             res.status(500).send()
         }
     }
@@ -77,9 +80,8 @@ router.delete('/:pid', async (req, res) => {
         if (error instanceof ProductError) {
             res.status(error.code).send({ status: 'error', error: error.message })
         } else {
+            console.log(error)
             res.status(500).send()
         }
     }
 })
-
-export default router;

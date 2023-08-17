@@ -1,5 +1,11 @@
 #### Proyecto Final
 
+**17/8/23 - Correción Primera entrega:**
+
+Agregué a la ruta de agregar producto al carrito el chequeo de que el producto exista y de que tenga stock mayor a 0. Finalmente importé el ProductManager desde el router de productos para no duplicarlo y que no quede en dos lugares la referencia al archivo .json.
+
+También arreglé el comando start.
+
 **11/8/23 - Primera entrega:**
 
 Despues de no encontrar un contrato elegante entre el router y el manager de productos me puse a leer (quizás demasiado) y termine con un manejo de errores con más lineas que el resto del codigo. Creo que es bastante robusto y va a quedar bien para cuando se vaya ampliando.

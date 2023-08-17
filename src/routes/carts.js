@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { CartError, CartManager } from '../managers/carts.js';
+import { ProductError } from '../managers/products.js';
+import { pm } from './products.js'
 import { resolve } from 'path';
 
 const router = Router();
@@ -15,6 +17,7 @@ router.post('/', async (req, res) => {
         if (error instanceof CartError) {
             res.status(error.code).send({ status: 'error', error: error.message })
         } else {
+            console.log(error)
             res.status(500).send()
         }
     }
@@ -29,6 +32,7 @@ router.get('/:cid', async (req, res) => {
         if (error instanceof CartError) {
             res.status(error.code).send({ status: 'error', error: error.message })
         } else {
+            console.log(error)
             res.status(500).send()
         }
     }
@@ -38,12 +42,15 @@ router.post('/:cid/product/:pid', async (req, res) => {
     try {
         const cid = req.params.cid
         const pid = req.params.pid
+        const product = await pm.getProductById(pid)
+        if (product.stock <= 0) throw new ProductError(403, 'Producto sin stock')
         await cm.addProductToCart(cid, pid)
-        res.send({ status: 'success' })
+        res.send({status: 'success'})
     } catch (error) {
-        if (error instanceof CartError) {
+        if (error instanceof CartError || error instanceof ProductError) {
             res.status(error.code).send({ status: 'error', error: error.message })
         } else {
+            console.log(error)
             res.status(500).send()
         }
     }
