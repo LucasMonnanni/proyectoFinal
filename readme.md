@@ -8,6 +8,8 @@ Los managers de fs no han cambiado más que alguna correción de estilo. Los de 
 
 En cuanto al chat lo mantuve bastante sencillo, sin más autenticación que una dirección de email válida. También trae toda la colección de mensajes al ingresar, se me ocurren varias maneras de limpiarlo pero la consigna no decía nada así que escucho tus comentarios al respecto.
 
+PD: La contraseña a la DB de Atlas la levanta como variable de entorno para que no quede en el repo público de github.
+
 **17/8/23 - Correción Primera entrega:**
 
 Agregué a la ruta de agregar producto al carrito el chequeo de que el producto exista y de que tenga stock mayor a 0. Finalmente importé el ProductManager desde el router de productos para no duplicarlo y que no quede en dos lugares la referencia al archivo .json.
