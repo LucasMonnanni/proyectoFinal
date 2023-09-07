@@ -14,7 +14,7 @@ let pm;
 let cm;
 
 if (persistenceMode == 'db') {
-    mongoose.connect('mongodb+srv://lucasmonnanni:0Uy6iJS7lBSbXWSy@cluster0.3jaxn14.mongodb.net/ecommerce?retryWrites=true&w=majority')
+    mongoose.connect(`mongodb+srv://lucasmonnanni:${process.env.PASSWORD}@cluster0.3jaxn14.mongodb.net/ecommerce?retryWrites=true&w=majority`)
     import('./dao/db/managers/products.js').then(mod=> pm = mod.ProductManager)
     import('./dao/db/managers/carts.js').then(mod=> cm = mod.CartManager)
 } else if (persistenceMode == 'fs') {
@@ -42,6 +42,7 @@ app.set('views', resolve('./src/views'))
 app.set('view engine', 'handlebars')
 
 app.use('/views', viewsRouter);
+
 
 app.use((error, req, res, next)=>{
     console.log(error.stack)
