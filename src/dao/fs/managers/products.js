@@ -1,12 +1,5 @@
 import fs from 'fs'
-
-export class ProductError extends Error {
-    constructor(code, message) {
-        super()
-        this.code = code
-        this.message = message
-    }
-}
+import { ProductError } from '../../errors.js'
 
 export class ProductManager {
     constructor(path) {
@@ -31,7 +24,6 @@ export class ProductManager {
         price = +price
         stock = +stock
         status = !!status
-
         if (!title || !description || !price || !code || !category || (!stock && stock != 0) ) {
             const error = `Todos los campos son obligatorios`
             throw new ProductError(400, error)
@@ -45,6 +37,7 @@ export class ProductManager {
             description,
             price,
             code,
+            category,
             stock,
             status,
             thumbnails,
@@ -52,6 +45,7 @@ export class ProductManager {
         
         products.push(product)
         await fs.promises.writeFile(this.path, JSON.stringify(products))
+        return product
     }
 
     getProductIndexByID = (products, id) => {

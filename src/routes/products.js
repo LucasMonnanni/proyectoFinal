@@ -1,15 +1,11 @@
 import { Router } from 'express';
-import { ProductManager, ProductError } from '../managers/products.js';
-import { resolve } from 'path';
+import { ProductError } from '../dao/errors.js';
 import { uploader } from '../utils.js';
 
-export const router = Router();
-
-const path = resolve('./products.json')
-export const pm = new ProductManager(path)
+const router = Router();
 
 router.get('/', async (req, res) => {
-    let products = await pm.getProducts()
+    let products = await req.pm.getProducts()
     const start = req.query.start ?? 0
     const limit = req.query.limit
     if (limit) {
@@ -21,7 +17,8 @@ router.get('/', async (req, res) => {
 router.get('/:pid', async (req, res) => {
     try {
         const id = req.params.pid
-        const product = await pm.getProductById(id)
+        const product = await req.pm.getProductById(id)
+        console.log(product)
         res.send(product)
     } catch (error) {
         if (error instanceof ProductError) {
@@ -38,9 +35,9 @@ router.post('/', uploader.array('thumbnails'), async (req, res) => {
         const thumbnails = req.files.map((f) => `${f.destination}/${f.filename}`)
         const { title, description, price, code, stock, category, status } = req.body
 
-        const product = await pm.addProduct(title, description, price, thumbnails, code, stock, category, status)
-
-        res.send({ status: 'success' })
+        const product = await req.pm.addProduct(title, description, price, thumbnails, code, stock, category, status)
+        console.log(product)
+        res.send({ status: 'success', payload: product })
     } catch (error) {
         if (error instanceof ProductError) {
             res.status(error.code).send({ status: 'error', error: error.message })
@@ -58,8 +55,8 @@ router.put('/:pid', uploader.array('thumbnails'), async (req, res) => {
 
         if (req.files) { productData.thumbnails = req.files.map((f) => `${f.destination}/${f.filename}`) }
 
-        const product = await pm.updateProduct(pid, productData)
-        res.send({ status: 'success' })
+        const product = await req.pm.updateProduct(pid, productData)
+        res.send({ status: 'success', payload: product })
     } catch (error) {
         console.log(error.stack)
         if (error instanceof ProductError) {
@@ -74,7 +71,7 @@ router.put('/:pid', uploader.array('thumbnails'), async (req, res) => {
 router.delete('/:pid', async (req, res) => {
     try {
         const pid = req.params.pid
-        await pm.deleteProduct(pid)
+        await req.pm.deleteProduct(pid)
         res.send({ status: 'success' })
     } catch(error) {
         if (error instanceof ProductError) {
@@ -85,3 +82,5 @@ router.delete('/:pid', async (req, res) => {
         }
     }
 })
+
+export default router;

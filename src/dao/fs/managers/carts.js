@@ -1,12 +1,5 @@
 import fs from 'fs'
-
-export class CartError extends Error {
-    constructor(code, message) {
-        super()
-        this.code = code
-        this.message = message
-    }
-}
+import { CartError } from '../../errors.js'
 
 export class CartManager {
     constructor(path) {
