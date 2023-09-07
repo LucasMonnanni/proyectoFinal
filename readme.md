@@ -1,5 +1,13 @@
 #### Proyecto Final
 
+**7/9/23 - Práctica Integradora:**
+
+Han cambiado muchas cosas. En primer lugar, los dos modelos de persistencia de datos conviven y se puede configurar cual usa la app desde `app.js` con una burda variable de texto. Cabe aclarar que en modo `'fs'`el chat no funciona.
+
+Los managers de fs no han cambiado más que alguna correción de estilo. Los de mongoDb funcionan como port entre las funciones que llama el router, que son iguales para ambos casos, y las funciones de mongoose. También manejan los posibles errores, que incluyen los de validación del schema. No es bonito ese código pero los errores de mongoose son realmente intrincados. La idea fue que todo error que signifique algo claro llegue a la response en castellano y el resto como 500 sin más.
+
+En cuanto al chat lo mantuve bastante sencillo, sin más autenticación que una dirección de email válida. También trae toda la colección de mensajes al ingresar, se me ocurren varias maneras de limpiarlo pero la consigna no decía nada así que escucho tus comentarios al respecto.
+
 **17/8/23 - Correción Primera entrega:**
 
 Agregué a la ruta de agregar producto al carrito el chequeo de que el producto exista y de que tenga stock mayor a 0. Finalmente importé el ProductManager desde el router de productos para no duplicarlo y que no quede en dos lugares la referencia al archivo .json.
