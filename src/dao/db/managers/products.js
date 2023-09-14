@@ -54,8 +54,10 @@ export const ProductManager = {
         return product
     },
 
-    getProducts: async () => {
-        return await productModel.find()
+    getProducts: async (params) => {
+        const products = await productModel.find(params.query)
+        products.sort(params.sort)
+        return products
     },
 
     updateProduct: async (pid, productData) => {

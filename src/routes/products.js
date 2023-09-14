@@ -5,12 +5,14 @@ import { uploader } from '../utils.js';
 const router = Router();
 
 router.get('/', async (req, res) => {
-    let products = await req.pm.getProducts()
-    const start = req.query.start ?? 0
-    const limit = req.query.limit
-    if (limit) {
-        products = products.splice(start, limit)
+    const { limit, page, query, sort } = req.query
+    const params = {
+        limit: limit || 10,
+        page: page || 1,
+        query: JSON.parse(query || {})
     }
+    if (sort) params.sort = sort
+    let products = await req.pm.getProducts(params)
     res.send(products)
 })
 
