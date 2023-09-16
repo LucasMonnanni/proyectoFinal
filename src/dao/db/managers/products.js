@@ -16,25 +16,7 @@ export const ProductManager = {
                 thumbnails,
             })
         } catch (error) {
-            console.log(error.errors)    
-            if (error instanceof mongoose.Error) { 
-                // esta rama es fea pero al validar muchos campos en simultáneo si falla mongoose devuelve un array de errores 
-                // envuelto en otro error. No encontré otra manera de hacer llegar los mensajes definidos en el schema a la response.
-                let message = ''
-                for (const key in error.errors) {
-                    if (Object.hasOwnProperty.call(error.errors, key)) {
-                        const element = error.errors[key];
-                        message += `${key}: ${element.message} \n`
-                    }
-                }
-                throw new ProductError(400, message)
-            } else if (/^E11000/.test(error.message)) {
-                //El código de error misterioso no es de mongoose si no de Mongo en sí, es el 'duplicate key error'
-                const error = 'Código de producto ya utilizado'
-                throw new ProductError(409, error)
-            } else {    
-                throw new Error()
-            }
+            handleMongoErrors(error)
         }
     },
 
@@ -43,21 +25,15 @@ export const ProductManager = {
         try {
             product = await productModel.findById(id)
         } catch(error) {
-            console.log(error.path)
-            if (error instanceof mongoose.CastError) {
-                throw new ProductError(400, `El ID indicado no es correcto`)
-            } else {
-                throw new Error()
-            }
+            handleMongoErrors(error)
         }
         if (!product) throw new ProductError(404, 'Producto no encontrado')
         return product
     },
 
     getProducts: async (params) => {
-        const products = await productModel.find(params.query)
-        products.sort(params.sort)
-        return products
+        console.log(params)
+        return await productModel.paginate(params.query, {limit: params.limit, page: params.page, sort: params.sort})
     },
 
     updateProduct: async (pid, productData) => {
@@ -74,12 +50,7 @@ export const ProductManager = {
                 {new: true}
             )
         } catch(error) {
-            console.log(error)
-            if (error instanceof mongoose.CastError) {
-                throw new ProductError(400, 'El ID de producto indicado no es correcto')
-            } else {
-                throw new Error()
-            }
+            handleMongoErrors(error)
         }
         if (!product) throw new ProductError(404, 'Producto no encontrado')
         return product
@@ -90,15 +61,35 @@ export const ProductManager = {
         try {
             product = await productModel.findByIdAndDelete(id)
         } catch(error) {
-            console.log(error.path)
-            if (error instanceof mongoose.CastError) {
-                throw new ProductError(400, `El ID indicado no es correcto`)
-            } else {
-                throw new Error()
-            }
+            handleMongoErrors(error)
         }
         if (!product) throw new ProductError(404, 'Producto no encontrado')
         return product
+    }
+}
+
+function handleMongoErrors(error) {
+    if (error instanceof mongoose.Error) {
+        // esta rama es fea pero al validar muchos campos en simultáneo si falla mongoose devuelve un array de errores 
+        // envuelto en otro error. No encontré otra manera de hacer llegar los mensajes definidos en el schema a la response.
+        let message = ''
+        if (error.errors) {
+            for (const key in error.errors) {
+                if (Object.hasOwnProperty.call(error.errors, key)) {
+                    const element = error.errors[key]
+                    message += `${key}: ${element.message} \n`
+                }
+            }
+        } else if (error instanceof mongoose.CastError) {
+            message = `El ID indicado no es correcto`
+        }
+        throw new ProductError(400, message)
+    } else if (/^E11000/.test(error.message)) {
+        //El código de error misterioso no es de mongoose si no de Mongo en sí, es el 'duplicate key error'
+        const error = 'Código de producto ya utilizado'
+        throw new ProductError(409, error)
+    } else {
+        throw new Error()
     }
 }
 

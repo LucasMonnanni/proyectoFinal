@@ -1,26 +1,29 @@
 import express from 'express';
+import 'dotenv/config';
 import productsRouter from './routes/products.js';
 import cartsRouter from './routes/carts.js';
 import viewsRouter from './routes/views.js';
 
-import { ProductManager } from './dao/db/managers/products.js'
-import { CartManager } from './dao/db/managers/carts.js'
+import { ProductManager } from './dao/db/managers/products.js';
+import { CartManager } from './dao/db/managers/carts.js';
 import { resolve } from 'path';
 import mongoose from 'mongoose';
 
 import { Server } from 'socket.io';
-import handlebars from 'express-handlebars'
+import handlebars from 'express-handlebars';
+import cookieParser from 'cookie-parser';
 import { messageModel } from './dao/db/models/messages.js';
 
 mongoose.connect(`mongodb+srv://lucasmonnanni:${process.env.PASSWORD}@cluster0.3jaxn14.mongodb.net/ecommerce?retryWrites=true&w=majority`)
 
 const app = express();
+app.use(cookieParser('secretisimo'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/static', express.static(resolve('./src/public')));
 
-app.use('/api', (req, res, next) => {
+app.use('/', (req, res, next) => {
     req.pm = ProductManager
     req.cm = CartManager
     next()
@@ -33,8 +36,7 @@ app.engine('handlebars', handlebars.engine())
 app.set('views', resolve('./src/views'))
 app.set('view engine', 'handlebars')
 
-app.use('/views', viewsRouter);
-
+app.use('/', viewsRouter);
 
 app.use((error, req, res, next) => {
     console.log(error.stack)

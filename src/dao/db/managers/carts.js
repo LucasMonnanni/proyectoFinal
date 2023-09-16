@@ -25,16 +25,131 @@ export const CartManager = {
     },
 
     addProductToCart: async (cid, pid) => {
-        const cart = await CartManager.getCartByID(cid) //refiero a la otra función para no duplicar el manejo de errores
-        const pIdx = cart.products.findIndex((v, i) => v.id == pid)
-        if (pIdx == -1) {
-            cart.products.push({
-                id: pid,
-                quantity: 1
-            })
-        } else {
-            cart.products[pIdx].quantity += 1
+        let res
+        try {
+            res = await cartModel.updateOne(
+                {
+                    _id: cid,
+                    'products.product': pid
+                },
+                {
+                    $inc: {
+                        'products.$.quantity': 1
+                    }
+                }
+            )
+            if (res.modifiedCount == 0) {
+                res = await cartModel.findByIdAndUpdate(
+                    cid,
+                    {
+                        $push: {
+                            products: {
+                                product: pid,
+                                quantity: 1
+                            }
+                        }
+                    },
+                    {
+                        new: true
+                    }
+                )
+            }
+        } catch(error) {
+            console.log(error)
+            if (error instanceof mongoose.CastError) { // Errores de tipos de dato, en este caso el ID no es legible como ObjectId
+                throw new CartError(400, `El ID indicado no es correcto`)
+            } else {
+                throw new Error()
+            }
         }
-        cart.save()
+        
+        if (!res) throw new CartError(404, 'Carrito no encontrado')
+    },
+
+    deleteProductFromCart: async (cid, pid) => {
+        let res;
+        try {
+            res = await cartModel.findByIdAndUpdate(
+                cid,
+                {
+                    $pull: {
+                        products: {
+                            product: pid
+                        }
+                    }
+                }
+            )
+        } catch(error) {
+            if (error instanceof mongoose.CastError) { // Errores de tipos de dato, en este caso el ID no es legible como ObjectId
+                throw new CartError(400, `El ID indicado no es correcto`)
+            } else {
+                throw new Error()
+            }
+        }
+        if (!res) throw new CartError(404, 'Carrito no encontrado')
+    },
+
+    updateProducts: async (cid, products) => {
+        let cart;
+        try {
+            cart = await cartModel.findByIdAndUpdate(
+                cid,
+                {
+                    products: products
+                }
+            )
+        } catch(error) {
+            if (error instanceof mongoose.CastError) { // Errores de tipos de dato, en este caso el ID no es legible como ObjectId
+                throw new CartError(400, `El ID indicado no es correcto`)
+            } else {
+                throw new Error()
+            }
+        }
+
+        if (!cart) throw new CartError(404, 'Carrito no encontrado')
+    },
+
+    updateProductQuantity: async (cid, pid, quantity) => {
+        let res;
+        try {
+            res = await cartModel.updateOne(
+                {
+                    _id: cid,
+                    'products.product': pid
+                },
+                {
+                    $set: {
+                        'products.$.quantity': quantity
+                    }
+                }
+            )
+        } catch(error) {
+            if (error instanceof mongoose.CastError) { // Errores de tipos de dato, en este caso el ID no es legible como ObjectId
+                throw new CartError(400, `El ID indicado no es correcto`)
+            } else {
+                throw new Error()
+            }
+        }
+        if (res.modifiedCount == 0 ) new CartError(400, 'Producto no encontrado en el carrito')
+        if (!res) throw new CartError(404, 'Carrito no encontrado')
+    },
+
+    clearProducts: async (cid) => {
+        let cart;
+        try {
+            cart = await cartModel.findByIdAndUpdate(
+                cid,
+                {
+                    products: []
+                }
+            )
+        } catch(error) {
+            if (error instanceof mongoose.CastError) { // Errores de tipos de dato, en este caso el ID no es legible como ObjectId
+                throw new CartError(400, `El ID indicado no es correcto`)
+            } else {
+                throw new Error()
+            }
+        }
+        if (!cart) throw new CartError(404, 'Carrito no encontrado')
     }
 }

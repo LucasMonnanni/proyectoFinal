@@ -1,5 +1,11 @@
 #### Proyecto Final
 
+15/9/23 - Segunda Preentrega:
+
+Agregada la paginación a los productos. Agregados los endpoints para agregar, quitar y editar los productos en carrito. Hice todo lo posible por delegar las operaciones a la DB y aprovechar las funciones de mongo (push, pull, etc.), a costa de alguna que otra operación no muy intuitiva.
+
+En cuanto a las vistas, no quise duplicar lo hecho en la API con lo cual las vistas llaman automáticamente un `fecth()` para obtener la información. No es demasiado sofisticado pero funciona rápido y bien. Para poder agregar productos al carrito y mantener la coherencia agregué una cookie con el Id de carrito que se renueva con cada operación y dura una hora (completamente arbitrario).
+
 **7/9/23 - Práctica Integradora:**
 
 Han cambiado muchas cosas. En primer lugar, los dos modelos de persistencia de datos conviven y se puede configurar cual usa la app desde `app.js` con una burda variable de texto. Cabe aclarar que en modo `'fs'`el chat no funciona.

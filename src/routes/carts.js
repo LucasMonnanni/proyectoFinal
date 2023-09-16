@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
 router.get('/:cid', async (req, res) => {
     try {
         const id = req.params.cid
-        const products = await req.cm.getCartByID(id)
+        const { products } = await req.cm.getCartByID(id)
         res.send({ products })
     } catch (error) {
         if (error instanceof CartError) {
@@ -41,6 +41,70 @@ router.post('/:cid/product/:pid', async (req, res) => {
         res.send({status: 'success'})
     } catch (error) {
         if (error instanceof CartError || error instanceof ProductError) {
+            res.status(error.code).send({ status: 'error', error: error.message })
+        } else {
+            console.log(error)
+            res.status(500).send()
+        }
+    }
+})
+
+router.delete('/:cid/product/:pid', async (req, res) => {
+    try {
+        const cid = req.params.cid
+        const pid = req.params.pid
+        await req.cm.deleteProductFromCart(cid, pid)
+        res.send({status: 'success'})
+    } catch (error) {
+        if (error instanceof CartError) {
+            res.status(error.code).send({ status: 'error', error: error.message })
+        } else {
+            console.log(error)
+            res.status(500).send()
+        }
+    }
+})
+
+router.put('/:cid', async (req, res) => {
+    try {
+        const cid = req.params.cid
+        const products = req.body
+        await req.cm.updateProducts(cid, products)
+        res.send({status: 'Success'})
+    } catch (error) {
+        if (error instanceof CartError) {
+            res.status(error.code).send({ status: 'error', error: error.message })
+        } else {
+            console.log(error)
+            res.status(500).send()
+        }
+    }
+})
+
+router.put('/:cid/product/:pid', async (req, res) => {
+    try {
+        const cid = req.params.cid
+        const pid = req.params.pid
+        const quantity = req.body.quantity
+        await req.cm.updateProductQuantity(cid, pid, quantity)
+        res.send({status: 'Success'})
+    } catch (error) {
+        if (error instanceof CartError) {
+            res.status(error.code).send({ status: 'error', error: error.message })
+        } else {
+            console.log(error)
+            res.status(500).send()
+        }
+    }
+})
+
+router.delete('/:cid', async (req, res) => {
+    try {
+        const cid = req.params.cid
+        await req.cm.clearProducts(cid)
+        res.send({status: 'Success'})
+    } catch (error) {
+        if (error instanceof CartError) {
             res.status(error.code).send({ status: 'error', error: error.message })
         } else {
             console.log(error)

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { ProductError } from '../dao/errors.js';
 import { uploader } from '../utils.js';
+import { stringify } from 'querystring'
 
 const router = Router();
 
@@ -9,18 +10,39 @@ router.get('/', async (req, res) => {
     const params = {
         limit: limit || 10,
         page: page || 1,
-        query: JSON.parse(query || {})
+        query: JSON.parse(query || '{}')
     }
-    if (sort) params.sort = sort
-    let products = await req.pm.getProducts(params)
-    res.send(products)
+    if (['asc', 'desc'].includes(sort)) {
+        params.sort = { price: sort }
+    } else {
+        params.sort = {}
+    }
+
+    let data = await req.pm.getProducts(params)
+
+    const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = data
+    const baseUrl = req.protocol + '://' + req.get('host') + req.baseUrl + '/?'
+
+    let prevLink = null
+    let nextLink = null
+    const metaData = { limit}
+    if (query) metaData.query = query
+    if (sort) metaData.sort = sort
+    if (data.hasPrevPage) {
+        metaData.page = +page - 1
+        prevLink = baseUrl + stringify(metaData)
+    }
+    if (data.hasNextPage) {
+        metaData.page = +page + 1
+        nextLink = baseUrl + stringify(metaData)
+    }
+    res.send({ status: 'Success', payload: docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage, prevLink, nextLink })
 })
 
 router.get('/:pid', async (req, res) => {
     try {
         const id = req.params.pid
         const product = await req.pm.getProductById(id)
-        console.log(product)
         res.send(product)
     } catch (error) {
         if (error instanceof ProductError) {
@@ -38,7 +60,6 @@ router.post('/', uploader.array('thumbnails'), async (req, res) => {
         const { title, description, price, code, stock, category, status } = req.body
 
         const product = await req.pm.addProduct(title, description, price, thumbnails, code, stock, category, status)
-        console.log(product)
         res.send({ status: 'success', payload: product })
     } catch (error) {
         if (error instanceof ProductError) {
@@ -75,7 +96,7 @@ router.delete('/:pid', async (req, res) => {
         const pid = req.params.pid
         await req.pm.deleteProduct(pid)
         res.send({ status: 'success' })
-    } catch(error) {
+    } catch (error) {
         if (error instanceof ProductError) {
             res.status(error.code).send({ status: 'error', error: error.message })
         } else {
