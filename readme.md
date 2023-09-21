@@ -1,6 +1,10 @@
 #### Proyecto Final
 
-15/9/23 - Segunda Preentrega:
+**21/9/23 - Implementación de login**
+
+No comprendo bien según la documentación de Express como devolver un redirect pero cambiando el método, con lo cual manejo manualmente desde el front la redirección.
+
+**15/9/23 - Segunda Preentrega:**
 
 Agregada la paginación a los productos. Agregados los endpoints para agregar, quitar y editar los productos en carrito. Hice todo lo posible por delegar las operaciones a la DB y aprovechar las funciones de mongo (push, pull, etc.), a costa de alguna que otra operación no muy intuitiva.
 

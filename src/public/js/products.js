@@ -29,29 +29,42 @@ getProducts = async (url) => {
         productsDiv.appendChild(d)
     });
     
-    const prevPageLink = document.getElementById('prevPageLink');
-    const nextPageLink = document.getElementById('nextPageLink');
+    const prevPageButton = document.getElementById('prevPageButton');
+    const nextPageButton = document.getElementById('nextPageButton');
     if (data.hasPrevPage) {
-        prevPageLink.onclick = async () =>{
+        prevPageButton.onclick = async () =>{
             await getProducts(data.prevLink)
         }
+        prevPageButton.disabled = false
     } else {
-        prevPageLink.disabled = true
-        prevPageLink.onclick = () =>{}
+        prevPageButton.disabled = true
+        prevPageButton.onclick = () =>{}
     }
     if (data.hasNextPage) {
-        nextPageLink.onclick = async () => {
+        nextPageButton.onclick = async () => {
             await getProducts(data.nextLink)
         }
+        nextPageButton.disabled = false
     } else {
-        nextPageLink.disabled = true
-        nextPageLink.onclick = () =>{}
+        nextPageButton.disabled = true
+        nextPageButton.onclick = () =>{}
     }
 }
 
 
 
 document.addEventListener('DOMContentLoaded', async () =>{
+    document.getElementById('logoutButton').onclick = async () => {
+        const response = await fetch('/api/sessions/logout' , {
+            method: 'DELETE',
+            redirect: 'follow'
+        })
+        console.log(response)
+        if (response.redirected) {
+            window.location.href = response.url;
+        }
+    }
+
     let params = {
         limit: 3,
         page: 1,

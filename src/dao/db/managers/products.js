@@ -32,7 +32,6 @@ export const ProductManager = {
     },
 
     getProducts: async (params) => {
-        console.log(params)
         return await productModel.paginate(params.query, {limit: params.limit, page: params.page, sort: params.sort})
     },
 

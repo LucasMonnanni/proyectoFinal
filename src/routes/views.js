@@ -13,16 +13,45 @@ router.use('/', async (req, res, next)=> {
     next()
 })
 
+const publicAccess = (req, res, next) => {
+    // if (req.session.user) return res.redirect('/profile');
+    next();
+}
+
+const privateAccess = (req, res, next) => {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+    next();
+}
+
 router.get('/chat', (req, res) => {
     res.render('chat', {title: 'Chat'});
 })
 
-router.get('/products', (req, res) => {
-    res.render('products', {title: 'Productos', cartId: req.signedCookies.cartId});
+router.get('/products', privateAccess, (req, res) => {
+    const user = req.session.user
+    delete user.passwordHash
+    res.render('products', {title: 'Productos', cartId: req.signedCookies.cartId, user});
 })
 
-router.get('/carts/:cid', (req, res) => {
+router.get('/carts/:cid', privateAccess, (req, res) => {
     res.render('cart', {title: 'Carrito', cartId: req.params.cid});
+})
+
+router.get('/login', publicAccess, (req, res)=> {
+    if (req.session.user) {res.status(301).redirect('/products/')}
+    res.render('login');
+})
+
+router.get('/register', publicAccess, (req, res)=> {
+    res.render('register')
+})
+
+router.get('/profile', privateAccess, (req, res)=> {
+    res.render('profile', {
+        
+    })
 })
 
 export default router
