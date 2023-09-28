@@ -6,6 +6,8 @@ import productsRouter from './routes/products.js';
 import cartsRouter from './routes/carts.js';
 import viewsRouter from './routes/views.js';
 import sessionsRouter from './routes/sessions.js'
+import passport from 'passport';
+import { initializePassport } from './config/passport.js';
 
 import { ProductManager } from './dao/db/managers/products.js';
 import { CartManager } from './dao/db/managers/carts.js';
@@ -37,6 +39,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }))
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', (req, res, next) => {
     req.pm = ProductManager
