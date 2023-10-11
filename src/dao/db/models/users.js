@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { cartCollection } from './carts.js';
 
 export const userCollection = 'users';
 
@@ -9,7 +10,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
+    age: Number,
     passwordHash: String,
+    cart: {
+        type: mongoose.ObjectId,
+        ref: cartCollection
+    },
     role: {
         type: String,
         default: 'user',

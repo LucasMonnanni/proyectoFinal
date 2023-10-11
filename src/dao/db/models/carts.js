@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { productCollection } from './products.js';
 
-const cartCollection = 'carts';
+export const cartCollection = 'carts';
 
 // El subschema no era la única manera de hacerlo pero dado lo que vimos en la última clase
 // queda listo para un populate en cuanto lo necesite.

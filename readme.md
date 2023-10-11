@@ -1,5 +1,9 @@
 #### Proyecto Final
 
+**10/10/23 - Segunda Práctica Integradora:**
+
+En primer lugar opté por usar `session` como sistema de autorización. Cambié el modelo de user y la lógica de registro y login para añadir la refrencia al carrito y en consecuencia eliminé el sistema de cookies burdo que había implementado. No usé por ahora ningún `populate()` porque el carrito es una vista independiente. El resto de los routers y managers quedaron sin cambios, no me quedó del todo claro si hay que implementar los routers personalizados, quedo atento a tus comentarios para implementarlo.
+
 **21/9/23 - Implementación de login**
 
 No comprendo bien según la documentación de Express como devolver un redirect pero cambiando el método, con lo cual manejo manualmente desde el front la redirección.

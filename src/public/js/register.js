@@ -13,11 +13,10 @@ form.addEventListener('submit', e=> {
             'Content-Type':'application/json'
         }
     }).then(response=> {
-        console.log(response)
         if (response.redirected) {
             window.location.href = response.url;
         }
-    }).catch(response => {
+    }).catch(error => {
         console.log(error)
     })
 })
