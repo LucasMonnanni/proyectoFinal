@@ -1,5 +1,6 @@
 import passport from 'passport'
 import local from 'passport-local'
+import config from './config.js'
 import gitHubStrategy from "passport-github2"
 import { userModel } from '../dao/db/models/users.js'
 import { cartModel } from '../dao/db/models/carts.js'
@@ -55,7 +56,7 @@ export const initializePassport = () => {
 
     passport.use('github', new GitHubStrategy({
         clientID: "Iv1.3ce7021cf8e2b5e0",
-        clientSecret: process.env.GITHUB_SECRET,
+        clientSecret: config.githubSecret,
         callBackURL: "http://localhost:8080/api/sessions/githubCallback"
     }, async (accessToken, refreshToken, profile, done) => {
         try {

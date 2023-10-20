@@ -1,16 +1,10 @@
-<script>
-    document.cartId = '{{user.cart}}'
-</script>
 <script src="/static/js/products.js"></script>
-<h4>Bienvenido {{user.firstName}} {{user.lastName}}!</h4>
-<p>Email: {{user.email}} </p>
-<p>Edad: {{user.age}}</p>
-<p>Rol: {{user.role}} </p>
+<div id="user"></div>
 <h3>Productos</h3>
 <div id="products">
 </div>
 <button type='button' id="prevPageButton">Página Anterior</button> 
 <button type='button' id="nextPageButton">Página Siguiente</button> 
 <hr>
-<a href="/carts/{{user.cart}}">Ver carrito</a><br>
+<a id='cartLink' href="#" disabled>Ver carrito</a><br>
 <button type='button' id="logoutButton">Cerrar Sesión</button>

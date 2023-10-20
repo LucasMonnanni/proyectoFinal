@@ -1,6 +1,5 @@
 import express from 'express';
 import session from 'express-session';
-import 'dotenv/config';
 
 import productsRouter from './routes/products.js';
 import cartsRouter from './routes/carts.js';
@@ -18,10 +17,21 @@ import MongoStore from 'connect-mongo';
 import { Server } from 'socket.io';
 import handlebars from 'express-handlebars';
 import cookieParser from 'cookie-parser';
+import config from './config/config.js';
 import { messageModel } from './dao/db/models/messages.js';
 
-const urlMongo = `mongodb+srv://lucasmonnanni:${process.env.PASSWORD}@cluster0.3jaxn14.mongodb.net/ecommerce?retryWrites=true&w=majority`
-mongoose.connect(urlMongo)
+let store;
+if (config.persistence=='mongo') {
+    let urlMongo = config.mongoUrl
+    mongoose.connect(urlMongo)
+    store = MongoStore.create({
+        mongoUrl: urlMongo,
+        ttl: 3600
+    })
+} else {
+    console.error('Specified persistence mode not configured.')
+    process.exit(0)
+}
 
 const app = express();
 app.use(cookieParser('secretisimo'));
@@ -31,10 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/static', express.static(resolve('./src/public')));
 
 app.use(session({
-    store: MongoStore.create({
-        mongoUrl: urlMongo,
-        ttl: 3600
-    }),
+    store: store,
     secret: "secretisisisimo",
     resave: false,
     saveUninitialized: false
@@ -65,9 +72,8 @@ app.use((error, req, res, next) => {
     next()
 })
 
-const port = 8080
-const server = app.listen(port, () => {
-    console.log(`Server listening on port ${port}`)
+const server = app.listen(config.port, () => {
+    console.log(`Server listening on port ${config.port}`)
 })
 
 const io = new Server(server)

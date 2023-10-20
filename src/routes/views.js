@@ -3,7 +3,6 @@ import { Router } from "express";
 const router = Router();
 
 const publicAccess = (req, res, next) => {
-    // if (req.session.user) return res.redirect('/profile');
     next();
 }
 
@@ -21,7 +20,7 @@ router.get('/chat', (req, res) => {
 router.get('/products', privateAccess, (req, res) => {
     const user = req.session.user
     delete user.passwordHash
-    res.render('products', {title: 'Productos', user});
+    res.render('products', {title: 'Productos'});
 })
 
 router.get('/carts/:cid', privateAccess, (req, res) => {
@@ -35,12 +34,6 @@ router.get('/login', publicAccess, (req, res)=> {
 
 router.get('/register', publicAccess, (req, res)=> {
     res.render('register')
-})
-
-router.get('/profile', privateAccess, (req, res)=> {
-    res.render('profile', {
-        
-    })
 })
 
 export default router

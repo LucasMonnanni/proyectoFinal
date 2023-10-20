@@ -1,7 +1,10 @@
-getProducts = async (url) => {
+const getProducts = async (url) => {
     console.log(url)
     const response = await fetch(url)
-    const data = await response.json();
+    return await response.json();
+}
+
+const renderProducts = (data) => {
     const productsDiv = document.getElementById('products');
     productsDiv.innerHTML = ''
     data.payload.forEach((product)=>{
@@ -51,7 +54,26 @@ getProducts = async (url) => {
     }
 }
 
+const getUserData = async () => {
+    const data = await (await fetch('/api/sessions/current', {
+        method: 'GET'
+    })).json()
+    if (data.status == 'Success') {
+        return data.payload
+    } else {
+        return false
+    }
+}
 
+const renderUser = (data) => {
+    const userDiv = document.getElementById('user');
+    userDiv.innerHTML = `<h4>Bienvenido ${data.firstName || '' } ${data.lastName || ''}!</h4>\n`
+    data.email ? userDiv.innerHTML += `<p>Email: ${data.email} </p>` : false
+    data.age ? userDiv.innerHTML += `<p>Edad: ${data.age}</p>` : false
+    data.role ? userDiv.innerHTML += `<p>Rol: ${data.role}</p>` : false
+
+    document.getElementById('cartLink').href = `/carts/${data.cart}`
+}
 
 document.addEventListener('DOMContentLoaded', async () =>{
     document.getElementById('logoutButton').onclick = async () => {
@@ -70,6 +92,10 @@ document.addEventListener('DOMContentLoaded', async () =>{
         page: 1,
         sort: 'asc'
     }
+    const userData = await getUserData()
+    document.cartId = userData.cart
+    renderUser(userData)
     const url = window.location.origin + '/api/products/?'+ new URLSearchParams(params).toString()
-    await getProducts(url)
+    const productData = await getProducts(url)
+    renderProducts(productData)
 })

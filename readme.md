@@ -1,5 +1,12 @@
 #### Proyecto Final
 
+**19/10/23 - Reestructura de nuestro servidor:**
+
+Las configuraciones a través de `.env` ahora están encapsuladas en el objeto `config` para más prolijidad. Una de esas configuraciones es el tipo de persistencia, por ahora sólo habilitado como Mongo. 
+Separé los controladores de los routers para separar claramente las responsabilidades, dejando el llamado al middleware genérico del lado del router y la lógica de negocio del lado del controlador. En cuanto a las operaciones de datos, dejé como estaban los managers que respetaban lo que vimos como capa DAO más allá del nombre.
+La parte del front ya era asincrónica con `fetch` para obtener datos de la api con excepción de los datos de usuario. Para mantener la coherencia lo apliqué también a los datos de usuario a través de `/api/sessions/current`. Distinta será la cosa cuando cambie a JWT.
+Para ampliar también la funcionalidad del carrito agregué funciones para cambiar la cantidad de cada producto y para vaciarlo enteramente en la misma vista. 
+
 **10/10/23 - Segunda Práctica Integradora:**
 
 En primer lugar opté por usar `session` como sistema de autorización. Cambié el modelo de user y la lógica de registro y login para añadir la refrencia al carrito y en consecuencia eliminé el sistema de cookies burdo que había implementado. No usé por ahora ningún `populate()` porque el carrito es una vista independiente. El resto de los routers y managers quedaron sin cambios, no me quedó del todo claro si hay que implementar los routers personalizados, quedo atento a tus comentarios para implementarlo.
