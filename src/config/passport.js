@@ -2,8 +2,9 @@ import passport from 'passport'
 import local from 'passport-local'
 import config from './config.js'
 import gitHubStrategy from "passport-github2"
+import Carts from '../services/carts.js';
+import { UserDAO as Users } from '../dao/factory.js';
 import { UserError } from '../dao/errors.js';
-import { Carts, Users } from '../dao/factory.js' 
 import { createHash, isValidPassword, isAdmin } from '../utils.js'
 
 const LocalStrategy = local.Strategy;
@@ -19,11 +20,7 @@ export const initializePassport = () => {
             return done(null, user)
         } catch (error) {
             if (error instanceof UserError) {
-                if (error.code == 400) {
-                    return done(null, false, error.message)
-                } else {
-                    return done(error.message)
-                }
+                return done(null, false, error.message)
             } else {
                 console.log(error)
                 return done(error.message)
@@ -86,7 +83,7 @@ export const initializePassport = () => {
     })
 
     passport.deserializeUser(async (id, done) => {
-        let user = await Users.getUserById(id);
+        const user = await Users.getUserById(id);
         done(null, user);
     })
 }

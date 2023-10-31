@@ -5,7 +5,7 @@ const router = Router();
 
 router.post('/', controller.addCart)
 
-router.get('/:cid', controller.getCartByID)
+router.get('/:cid', controller.getCartById)
 
 router.post('/:cid/product/:pid', controller.addProductToCart)
 

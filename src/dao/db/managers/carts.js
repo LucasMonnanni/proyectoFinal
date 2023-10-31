@@ -8,7 +8,7 @@ export const CartManager = {
         return cart._id
     },
 
-    getCartByID: async (id) => {
+    getCartById: async (id) => {
         let cart
         try {
             cart = await cartModel.findById(id)

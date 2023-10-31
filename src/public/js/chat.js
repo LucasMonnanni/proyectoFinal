@@ -1,22 +1,19 @@
 let user;
-document.addEventListener('DOMContentLoaded', () =>{
-
+document.addEventListener('DOMContentLoaded', async () =>{
     const socket = io();
+
+    const data = await (await fetch('/api/sessions/current', {
+        method: 'GET'
+    })).json()
+    if (data.status == 'Success') {
+        const user = data.payload.email
+        socket.emit('authenticated', {user});
+    } else {
+        return
+    }
+
     const chatBox = document.getElementById('chatBox');
     const log = document.getElementById('messageLogs');
-
-    Swal.fire({
-        title: "Identificate",
-        input: "text",
-        text: "Ingresa una dirección de correo identificarte",
-        inputValidator: (value) => {
-            return !(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value)) && 'Ingresa un correo válido'
-        },
-        allowOutsideClick: false,
-    }).then(result => {
-        user = result.value
-        socket.emit('authenticated', {user});
-    })
 
     chatBox.addEventListener('keyup', evt => {
         if (evt.key === "Enter") {

@@ -12,7 +12,7 @@ export const UserManager = {
                 //El código de error misterioso no es de mongoose si no de Mongo en sí, es el 'duplicate key error' 
                 throw new UserError(400, 'El usuario ya existe')
             } else {
-                throw new UserError(500, 'Error al crear el usuario: ' + error)
+                throw new Error()
             }
         }
     },

@@ -1,5 +1,5 @@
 import { ProductError, CartError } from '../dao/errors.js';
-import { Carts, Products } from '../dao/factory.js';
+import Carts from '../services/carts.js';
 
 const addCart = async (req, res) => {
     try {
@@ -11,10 +11,10 @@ const addCart = async (req, res) => {
     }
 }
 
-const getCartByID = async (req, res) => {
+const getCartById = async (req, res) => {
     try {
-        const id = req.params.cid
-        const { products } = await Carts.getCartByID(id)
+        const cid = req.params.cid
+        const products = await Carts.getCartById(cid)
         res.send({ products })
     } catch (error) {
         if (error instanceof CartError) {
@@ -30,8 +30,6 @@ const addProductToCart = async (req, res) => {
     try {
         const cid = req.params.cid
         const pid = req.params.pid
-        const product = await Products.getProductById(pid)
-        if (product.stock <= 0) throw new ProductError(400, 'Producto sin stock')
         await Carts.addProductToCart(cid, pid)
         res.send({status: 'success'})
     } catch (error) {
@@ -84,7 +82,7 @@ const updateProductQuantity = async (req, res) => {
         await Carts.updateProductQuantity(cid, pid, quantity)
         res.send({status: 'Success'})
     } catch (error) {
-        if (error instanceof CartError) {
+        if (error instanceof CartError || error instanceof ProductError) {
             res.status(error.code).send({ status: 'error', error: error.message })
         } else {
             console.log(error)
@@ -108,4 +106,4 @@ const clearProducts = async (req, res) => {
     }
 }
 
-export default { addCart, getCartByID, addProductToCart, deleteProductFromCart, updateProducts, updateProductQuantity, clearProducts }
+export default { addCart, getCartById, addProductToCart, deleteProductFromCart, updateProducts, updateProductQuantity, clearProducts }

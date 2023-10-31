@@ -58,6 +58,7 @@ const getUserData = async () => {
     const data = await (await fetch('/api/sessions/current', {
         method: 'GET'
     })).json()
+    console.log(data)
     if (data.status == 'Success') {
         return data.payload
     } else {

@@ -1,3 +1,5 @@
+import userDTO from '../dao/dto/users.js'
+
 const login = async (req, res) => { 
     delete req.user.password;
     req.session.user = req.user;
@@ -6,7 +8,7 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
     delete req.user.password;
-    req.session.user = req.user;
+    req.session.user = req.user
     res.redirect('/products')
 }
 
@@ -21,7 +23,7 @@ const logout = async (req, res) => {
 }
 
 const githubCallback = async (req, res) => {
-    req.session.user = req.user;
+    req.session.user = req.user
     res.redirect('/products/')
 }
 
@@ -31,11 +33,11 @@ const getCurrent = async (req, res) => {
             res.status(401).send({ status: 'Error', error: "Not logged in" })
             return
         }
-        delete req.session.user.passwordHash
-        res.send({ status: 'Success', payload: req.session.user });
+        const payload = new userDTO(req.session.user)
+        res.send({ status: 'Success', payload })
     } catch(error){
         console.log(error)
-        res.status(500).send({ status: 'Error'});
+        res.status(500).send({ status: 'Error'})
     }
 }
 

@@ -1,22 +1,11 @@
-import { ProductError } from '../dao/errors.js';
-import { Products } from '../dao/factory.js';
 import { stringify } from 'querystring';
+import Products from '../services/products.js';
 
 
 const getProducts = async (req, res) => {
     const { limit, page, query, sort } = req.query
-    const params = {
-        limit: limit || 10,
-        page: page || 1,
-        query: JSON.parse(query || '{}')
-    }
-    if (['asc', 'desc'].includes(sort)) {
-        params.sort = { price: sort }
-    } else {
-        params.sort = {}
-    }
 
-    let data = await Products.getProducts(params)
+    let data = await Products.getProducts(limit, page, query, sort)
 
     const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = data
     const baseUrl = req.protocol + '://' + req.get('host') + req.baseUrl + '/?'
@@ -72,10 +61,8 @@ const addProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
         const pid = req.params.pid
-        const productData = req.body
-
-        if (req.files) { productData.thumbnails = req.files.map((f) => `${f.destination}/${f.filename}`) }
-
+        const productData = { ...req.body, files: req.files}
+        
         const product = await Products.updateProduct(pid, productData)
         res.send({ status: 'success', payload: product })
     } catch (error) {

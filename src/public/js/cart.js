@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', async () =>{
                 quantity
             })
         })).json()
+        console.log(response)
         if (response.status == 'Success') {
             event.target.oldValue = event.target.value
         } else {
