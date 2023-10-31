@@ -8,8 +8,6 @@ import sessionsRouter from './routes/sessions.js'
 import passport from 'passport';
 import { initializePassport } from './config/passport.js';
 
-import { ProductManager } from './dao/db/managers/products.js';
-import { CartManager } from './dao/db/managers/carts.js';
 import { resolve } from 'path';
 import mongoose from 'mongoose';
 import MongoStore from 'connect-mongo';
@@ -49,12 +47,6 @@ app.use(session({
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.use('/', (req, res, next) => {
-    req.pm = ProductManager
-    req.cm = CartManager
-    next()
-})
 
 app.use('/api/products/', productsRouter);
 app.use('/api/carts/', cartsRouter);

@@ -2,8 +2,8 @@ import passport from 'passport'
 import local from 'passport-local'
 import config from './config.js'
 import gitHubStrategy from "passport-github2"
-import { userModel } from '../dao/db/models/users.js'
-import { cartModel } from '../dao/db/models/carts.js'
+import { UserError } from '../dao/errors.js';
+import { Carts, Users } from '../dao/factory.js' 
 import { createHash, isValidPassword, isAdmin } from '../utils.js'
 
 const LocalStrategy = local.Strategy;
@@ -14,16 +14,19 @@ export const initializePassport = () => {
         try {
             const { password, ...data } = req.body
             data.passwordHash = createHash(password)
-            data.cart = await req.cm.addCart()
-            const user = await userModel.create(data)
+            data.cart = await Carts.addCart()
+            const user = await Users.addUser(data)
             return done(null, user)
         } catch (error) {
-            console.log(error)
-            if (/^E11000/.test(error.message)) {
-                //El código de error misterioso no es de mongoose si no de Mongo en sí, es el 'duplicate key error' 
-                return done(null, false, 'El usuario ya existe')
+            if (error instanceof UserError) {
+                if (error.code == 400) {
+                    return done(null, false, error.message)
+                } else {
+                    return done(error.message)
+                }
             } else {
-                return done('Error al crear el usuario: ' + error)
+                console.log(error)
+                return done(error.message)
             }
         }
     }));
@@ -38,7 +41,7 @@ export const initializePassport = () => {
                     role: 'admin'
                 })
             }
-            const user = await userModel.findOne({ email: username })
+            const user = await Users.getUser({ email: username })
             if (!user) {
                 console.log('Usuario no encontrado')
                 return done(null, false, {message: 'Usuario no encontrado'})
@@ -62,14 +65,14 @@ export const initializePassport = () => {
         try {
             let user = null
             if (profile._json.email) {
-                user = await userModel.findOne({ email: profile._json.email})
+                user = await Users.getUser({ email: profile._json.email})
             } else {
-                user = await userModel.findOne({ userName: profile._json.login})
+                user = await Users.getUser({ userName: profile._json.login})
             }
             if (!user) {
-                const cart = await cartModel.create({})
-                let newUser = { firstName: profile._json.name, userName: profile._json.login, email: profile._json.email, cart: cart._id}
-                let result = await userModel.create(newUser);
+                const cart = await Carts.addCart()
+                let newUser = { firstName: profile._json.name, userName: profile._json.login, email: profile._json.email, cart: cart}
+                let result = await Users.addUser(newUser);
                 return done(null, result);
             }
             done(null, user)
@@ -83,7 +86,7 @@ export const initializePassport = () => {
     })
 
     passport.deserializeUser(async (id, done) => {
-        let user = await userModel.findById(id);
+        let user = await Users.getUserById(id);
         done(null, user);
     })
 }

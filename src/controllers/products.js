@@ -1,5 +1,6 @@
 import { ProductError } from '../dao/errors.js';
-import { stringify } from 'querystring'
+import { Products } from '../dao/factory.js';
+import { stringify } from 'querystring';
 
 
 const getProducts = async (req, res) => {
@@ -15,7 +16,7 @@ const getProducts = async (req, res) => {
         params.sort = {}
     }
 
-    let data = await req.pm.getProducts(params)
+    let data = await Products.getProducts(params)
 
     const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = data
     const baseUrl = req.protocol + '://' + req.get('host') + req.baseUrl + '/?'
@@ -39,7 +40,7 @@ const getProducts = async (req, res) => {
 const getProductById = async (req, res) => {
     try {
         const id = req.params.pid
-        const product = await req.pm.getProductById(id)
+        const product = await Products.getProductById(id)
         res.send(product)
     } catch (error) {
         if (error instanceof ProductError) {
@@ -56,7 +57,7 @@ const addProduct = async (req, res) => {
         const thumbnails = req.files.map((f) => `${f.destination}/${f.filename}`)
         const { title, description, price, code, stock, category, status } = req.body
 
-        const product = await req.pm.addProduct(title, description, price, thumbnails, code, stock, category, status)
+        const product = await Products.addProduct(title, description, price, thumbnails, code, stock, category, status)
         res.send({ status: 'success', payload: product })
     } catch (error) {
         if (error instanceof ProductError) {
@@ -75,7 +76,7 @@ const updateProduct = async (req, res) => {
 
         if (req.files) { productData.thumbnails = req.files.map((f) => `${f.destination}/${f.filename}`) }
 
-        const product = await req.pm.updateProduct(pid, productData)
+        const product = await Products.updateProduct(pid, productData)
         res.send({ status: 'success', payload: product })
     } catch (error) {
         console.log(error.stack)
@@ -91,7 +92,7 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
     try {
         const pid = req.params.pid
-        await req.pm.deleteProduct(pid)
+        await Products.deleteProduct(pid)
         res.send({ status: 'success' })
     } catch (error) {
         if (error instanceof ProductError) {

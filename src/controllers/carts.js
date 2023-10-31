@@ -1,8 +1,9 @@
 import { ProductError, CartError } from '../dao/errors.js';
+import { Carts, Products } from '../dao/factory.js';
 
 const addCart = async (req, res) => {
     try {
-        const id = await req.cm.addCart()
+        const id = await Carts.addCart()
         res.send({ status: 'success', 'cartId': id })
     } catch (error) {
         console.log(error)
@@ -13,7 +14,7 @@ const addCart = async (req, res) => {
 const getCartByID = async (req, res) => {
     try {
         const id = req.params.cid
-        const { products } = await req.cm.getCartByID(id)
+        const { products } = await Carts.getCartByID(id)
         res.send({ products })
     } catch (error) {
         if (error instanceof CartError) {
@@ -29,9 +30,9 @@ const addProductToCart = async (req, res) => {
     try {
         const cid = req.params.cid
         const pid = req.params.pid
-        const product = await req.pm.getProductById(pid)
+        const product = await Products.getProductById(pid)
         if (product.stock <= 0) throw new ProductError(400, 'Producto sin stock')
-        await req.cm.addProductToCart(cid, pid)
+        await Carts.addProductToCart(cid, pid)
         res.send({status: 'success'})
     } catch (error) {
         if (error instanceof CartError || error instanceof ProductError) {
@@ -47,7 +48,7 @@ const deleteProductFromCart = async (req, res) => {
     try {
         const cid = req.params.cid
         const pid = req.params.pid
-        await req.cm.deleteProductFromCart(cid, pid)
+        await Carts.deleteProductFromCart(cid, pid)
         res.send({status: 'success'})
     } catch (error) {
         if (error instanceof CartError) {
@@ -63,7 +64,7 @@ const updateProducts = async (req, res) => {
     try {
         const cid = req.params.cid
         const products = req.body
-        await req.cm.updateProducts(cid, products)
+        await Carts.updateProducts(cid, products)
         res.send({status: 'Success'})
     } catch (error) {
         if (error instanceof CartError) {
@@ -80,7 +81,7 @@ const updateProductQuantity = async (req, res) => {
         const cid = req.params.cid
         const pid = req.params.pid
         const quantity = req.body.quantity
-        await req.cm.updateProductQuantity(cid, pid, quantity)
+        await Carts.updateProductQuantity(cid, pid, quantity)
         res.send({status: 'Success'})
     } catch (error) {
         if (error instanceof CartError) {
@@ -95,7 +96,7 @@ const updateProductQuantity = async (req, res) => {
 const clearProducts = async (req, res) => {
     try {
         const cid = req.params.cid
-        await req.cm.clearProducts(cid)
+        await Carts.clearProducts(cid)
         res.send({status: 'Success'})
     } catch (error) {
         if (error instanceof CartError) {
