@@ -47,7 +47,7 @@ const addProduct = async (req, res) => {
         const { title, description, price, code, stock, category, status } = req.body
 
         const product = await Products.addProduct(title, description, price, thumbnails, code, stock, category, status)
-        res.send({ status: 'success', payload: product })
+        res.send({ status: 'Success', payload: product })
     } catch (error) {
         if (error instanceof ProductError) {
             res.status(error.code).send({ status: 'error', error: error.message })
@@ -64,7 +64,7 @@ const updateProduct = async (req, res) => {
         const productData = { ...req.body, files: req.files}
         
         const product = await Products.updateProduct(pid, productData)
-        res.send({ status: 'success', payload: product })
+        res.send({ status: 'Success', payload: product })
     } catch (error) {
         console.log(error.stack)
         if (error instanceof ProductError) {
@@ -80,7 +80,7 @@ const deleteProduct = async (req, res) => {
     try {
         const pid = req.params.pid
         await Products.deleteProduct(pid)
-        res.send({ status: 'success' })
+        res.send({ status: 'Success' })
     } catch (error) {
         if (error instanceof ProductError) {
             res.status(error.code).send({ status: 'error', error: error.message })

@@ -5,6 +5,7 @@ const getProducts = async (url) => {
 }
 
 const renderProducts = (data) => {
+    console.log(data)
     const productsDiv = document.getElementById('products');
     productsDiv.innerHTML = ''
     data.payload.forEach((product)=>{
@@ -22,7 +23,6 @@ const renderProducts = (data) => {
         b.type = 'button'
         b.innerHTML = 'Agregar al carrito'
         b.onclick = async () => {
-            console.log(addUrl)
             const res = await fetch(addUrl, {method:'POST'})
             const data = await res.json()
             console.log(data)
@@ -36,7 +36,8 @@ const renderProducts = (data) => {
     const nextPageButton = document.getElementById('nextPageButton');
     if (data.hasPrevPage) {
         prevPageButton.onclick = async () =>{
-            await getProducts(data.prevLink)
+            const productData = await getProducts(data.prevLink)
+            renderProducts(productData)
         }
         prevPageButton.disabled = false
     } else {
@@ -45,7 +46,8 @@ const renderProducts = (data) => {
     }
     if (data.hasNextPage) {
         nextPageButton.onclick = async () => {
-            await getProducts(data.nextLink)
+            const productData = await getProducts(data.nextLink)
+            renderProducts(productData)
         }
         nextPageButton.disabled = false
     } else {

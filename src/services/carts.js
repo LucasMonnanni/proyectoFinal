@@ -27,5 +27,29 @@ export default {
     },
     clearProducts: async (id) => {
         await CartDAO.clearProducts(id)
+    },
+    purchaseCart: async (id) => {
+        const cart = await CartDAO.getCartById(id)
+        const items = cart.products
+
+        const purchased = []
+        const remaining = []
+        let amount = 0
+        // Seguramente puedo omitir el loop y hacer que lo resuelva mongo pero no encontre la manera
+        items.forEach(async item => {
+            if (item.product.stock >= item.quantity) {
+                purchased.push(item)
+                amount += item.product.price * item.quantity
+            } else {
+                remaining.push(item)
+            }
+        });
+
+        if (remaining.length) {
+            CartDAO.updateProducts(id, remaining)
+        } else {
+            CartDAO.clearProducts(id)
+        }
+        return { purchased, amount };
     }
 }

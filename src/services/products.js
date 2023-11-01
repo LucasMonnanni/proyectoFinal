@@ -14,12 +14,15 @@ export default {
         }
         return await ProductDAO.getProducts(params)
     },
+
     getProductById: async (id) => {
         return await ProductDAO.getProductById(id)
     },
+
     addProduct: async (title, description, price, thumbnails, code, stock, category, status) => {
         return await ProductDAO.addProduct(title, description, price, thumbnails, code, stock, category, status)
     },
+
     updateProduct: async (id, data) => {
         if (data.files) { 
             data.thumbnails = data.files.map((f) => `${f.destination}/${f.filename}`) 
@@ -27,7 +30,15 @@ export default {
         }
         return await ProductDAO.updateProduct(id, data)
     },
+
     deleteProduct: async (id) => {
         await ProductDAO.deleteProduct(id)
+    },
+
+    deductStock: async (items) => {
+        items = items.map( (item) => { 
+            return { _id: item.product._id, quantity: item.quantity } 
+        })
+        await ProductDAO.deductStock(items)
     }
 }

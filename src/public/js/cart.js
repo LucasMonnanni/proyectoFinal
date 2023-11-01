@@ -54,7 +54,18 @@ document.addEventListener('DOMContentLoaded', async () =>{
             productsDiv.innerHTML = ''
         }
     }
-
     document.getElementById('clearProductsButton').addEventListener('click', clearProducts)
+
+    const purchase = async () => {
+        const response = await (await fetch(url + '/purchase', {
+            method: 'POST'
+        })).json()
+        console.log(response)
+        if (response.status == 'Success') {
+            await getProducts(url)
+        }
+    }
+    document.getElementById('purchaseButton').addEventListener('click', purchase)
+
     await getProducts(url)
 })

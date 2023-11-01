@@ -64,6 +64,21 @@ export const ProductManager = {
         }
         if (!product) throw new ProductError(404, 'Producto no encontrado')
         return product
+    },
+
+    deductStock: async (items) => {
+        return await productModel.bulkWrite(items.map(item => {
+            return {
+                updateOne: {
+                    filter: {_id: item._id},
+                    update: {
+                        $inc: {
+                            stock: -item.quantity
+                        }
+                    }
+                }
+            }
+        }))
     }
 }
 

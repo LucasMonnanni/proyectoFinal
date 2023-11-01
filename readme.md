@@ -1,11 +1,25 @@
 #### Proyecto Final
 
+**31/10/23 - Tercera Preentrega:**
+
+Reestructuré el proyecto con las siguientes capas:
+routes -> controllers -> services -> DAO (-> mmodels)
+Donde, a grandes rasgos:
+**Routes** sólo deriva a cada controller agregando el middleware de restricción de acceso donde aplique.
+**Controllers** levanta los datos de la request, llama a los servicios y da formato a los datos (o errores) a devolver.
+**Services** formatea los datos de entrada y llama al DAO.
+**DAO** se contacta con la base de datos y discrimina los errores significativos para el front.
+
+Implementé una factory para devolver el DAO correspondiente a la persistencia elegida (sin implementar los DAO para fs).El middleware de restricción de acceso lo implementé con una función distinta para cada caso ya que no es el mismo criterio a aplicar en cada uno.
+
+En cuanto a los tickets, la request llega por la ruta `api/carts` y por ende se deriva a ese controller, que se encarga de llamar a los 3 servicios pertinentes. 
+
 **19/10/23 - Reestructura de nuestro servidor:**
 
-Las configuraciones a través de `.env` ahora están encapsuladas en el objeto `config` para más prolijidad. Una de esas configuraciones es el tipo de persistencia, por ahora sólo habilitado como Mongo. 
+Las configuraciones a través de `.env` ahora están encapsuladas en el objeto `config` para más prolijidad. Una de esas configuraciones es el tipo de persistencia, por ahora sólo habilitado como Mongo.
 Separé los controladores de los routers para separar claramente las responsabilidades, dejando el llamado al middleware genérico del lado del router y la lógica de negocio del lado del controlador. En cuanto a las operaciones de datos, dejé como estaban los managers que respetaban lo que vimos como capa DAO más allá del nombre.
 La parte del front ya era asincrónica con `fetch` para obtener datos de la api con excepción de los datos de usuario. Para mantener la coherencia lo apliqué también a los datos de usuario a través de `/api/sessions/current`. Distinta será la cosa cuando cambie a JWT.
-Para ampliar también la funcionalidad del carrito agregué funciones para cambiar la cantidad de cada producto y para vaciarlo enteramente en la misma vista. 
+Para ampliar también la funcionalidad del carrito agregué funciones para cambiar la cantidad de cada producto y para vaciarlo enteramente en la misma vista.
 
 **10/10/23 - Segunda Práctica Integradora:**
 
