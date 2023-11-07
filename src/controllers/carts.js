@@ -109,24 +109,21 @@ const clearProducts = async (req, res) => {
     }
 }
 
-const prePurchaseCart = async (req, res) => {
-    const items = await Carts.getCartById(req.params.cid)
-    res.render('purchase', {title: 'Compra', cartId: req.params.cid, items: JSON.parse(JSON.stringify(items))});
-}
-
 const purchaseCart = async (req, res) => {
     try {
         const cid = req.params.cid
         const { purchased, amount } = await Carts.purchaseCart(cid)
         if (purchased.length) {
             await Products.deductStock(purchased)
-            await Tickets.create(cid, amount, req.user)
+            const ticket = await Tickets.create(cid, amount, req.user)
+            res.send({status: 'Success', payload: ticket})
+        } else {
+            res.send({status: 'Success'})
         }
-        res.send({status: 'Success'})
     } catch(error) {
         console.log(error)
         res.status(500).send()
     }
 }
 
-export default { addCart, getCartById, addProductToCart, deleteProductFromCart, updateProducts, updateProductQuantity, clearProducts, prePurchaseCart, purchaseCart }
+export default { addCart, getCartById, addProductToCart, deleteProductFromCart, updateProducts, updateProductQuantity, clearProducts, purchaseCart }

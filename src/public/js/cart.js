@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', async () =>{
     const updateProductQuantity = async (event) => {
         const quantity = event.target.value
         const pid = event.target.parentNode.parentNode.parentNode.parentNode.id
-        console.log(event)
         const response = await (await fetch(url + `/product/${pid}`, {
             method: 'PUT',
             headers: {

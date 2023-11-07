@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row my-3">
-        <h2>Carrito</h2>
+        <h2>Compra</h2>
     </div>
     <div id="products" class="row row-cols-1 row-cols-lg-2 row-cols-xl-3 g-4">
             {{#each items}}
@@ -22,17 +22,17 @@
     <div id="buttons" class="row my-3">
         <a class="btn btn-secondary" id="purchaseButton">Finalizar compra</a> 
     </div>
+    <div id="buttons" class="row my-3">
+        <a class="btn btn-secondary" href="/carts/{{cartId}}">Volver al carrito</a> 
+    </div>
 </div>
 
 <script>
     const purchase = async () => {
-        const response = await (await fetch(url + '/purchase', {
+        const response = await (await fetch('/api/carts/{{cartId}}/purchase', {
             method: 'POST'
         })).json()
         console.log(response)
-        if (response.status == 'Success') {
-            await getProducts(url)
-        }
     }
     document.getElementById('purchaseButton').addEventListener('click', purchase)
 </script>
