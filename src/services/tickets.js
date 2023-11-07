@@ -1,4 +1,4 @@
-import { ProductDAO, CartDAO, TicketDAO } from '../dao/factory.js';
+import { TicketDAO } from '../dao/factory.js';
 
 export default {
     create: async (cid, amount, user) => {

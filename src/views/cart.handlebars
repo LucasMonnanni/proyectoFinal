@@ -2,9 +2,21 @@
     document.cartId = '{{cartId}}'
 </script>
 <script src="/static/js/cart.js"></script>
-<h2>Carrito</h2>
-<div id="products">
+<div class="container">
+    <div class="row my-3">
+        <h2>Carrito</h2>
+    </div>
+    <div id="products" class="row row-cols-1 row-cols-lg-2 row-cols-xl-3 g-4">
+    </div>
+    <div id="buttons" class="row my-3 justify-content-between">
+        <div class="col-auto">
+            <a class="btn btn-secondary" href="/products">Ver productos</a>
+        </div>
+        <div class="col-auto">
+            <a class="btn btn-secondary" id="clearProductsButton">Vaciar carrito</a>   
+        </div>
+    </div>
+    <div id="buttons" class="row my-3">
+        <a class="btn btn-secondary" href="/purchase/{{cartId}}">Comprar carrito!</a> 
+    </div>
 </div>
-<a href="/products">Ver productos</a><br>
-<button type='button' id="clearProductsButton">Vaciar carrito</button><br> 
-<button type='button' id="purchaseButton">Comprar carrito!</button><br> 

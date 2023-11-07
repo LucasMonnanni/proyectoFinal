@@ -1,19 +1,27 @@
-<h3>Registrate</h3>
-<form id="registerForm" style="padding: 1em;">
-    <label for="firstName" style="margin: 1em;">Nombre</label><br>
-    <input type="text" name="firstName" style="margin: 1em;"><br>
-    <label for="lastName" style="margin: 1em;">Apellido</label><br>
-    <input type="text" name="lastName" style="margin: 1em;"><br>
-    <label for="age" style="margin: 1em;">Edad</label><br>
-    <input type="number" name="age" style="margin: 1em;"><br>
-    <label for="email" style="margin: 1em;">Email</label><br>
-    <input type="text" name="email" style="margin: 1em;"><br>
-    <label for="password" style="margin: 1em;">Contraseña</label><br>
-    <input type="password" name="password" style="margin: 1em;"><br>
-    <input type="submit" style="margin: 1em;">
-</form>
-<br>
-<p>Ya tenés usuario?</p>
-<button type="button" id="registerButton">Ingresá</button>
-
+<div class="container">
+    <div class="row mt-3">
+        <h3>Registrate</h3>
+    </div>
+    <div class="row">
+        <form class="col-auto g-3" id="registerForm" >
+            <label class="form-label" for="firstName" >Nombre</label><br>
+            <input class="form-control mb-3" type="text" name="firstName"><br>
+            <label class="form-label" for="lastName">Apellido</label><br>
+            <input class="form-control mb-3" type="text" name="lastName"><br>
+            <label class="form-label" for="age">Edad</label><br>
+            <input class="form-control mb-3" type="number" name="age"><br>
+            <label class="form-label" for="email">Email</label><br>
+            <input class="form-control mb-3" type="text" name="email"><br>
+            <label class="form-label" for="password">Contraseña</label><br>
+            <input class="form-control mb-3" type="password" name="password"><br>
+            <input class="btn btn-secondary my-3" type="submit">
+        </form>
+    </div>
+    <div class="row my-4">
+        <div class="col-auto">
+            <p>Ya tenés usuario?</p>
+            <button class="btn btn-secondary" id="registerButton">Ingresá</button>
+        </div>
+    </div>
+</div>
 <script src="/static/js/register.js"></script>

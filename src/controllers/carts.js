@@ -109,6 +109,11 @@ const clearProducts = async (req, res) => {
     }
 }
 
+const prePurchaseCart = async (req, res) => {
+    const items = await Carts.getCartById(req.params.cid)
+    res.render('purchase', {title: 'Compra', cartId: req.params.cid, items: JSON.parse(JSON.stringify(items))});
+}
+
 const purchaseCart = async (req, res) => {
     try {
         const cid = req.params.cid
@@ -124,4 +129,4 @@ const purchaseCart = async (req, res) => {
     }
 }
 
-export default { addCart, getCartById, addProductToCart, deleteProductFromCart, updateProducts, updateProductQuantity, clearProducts, purchaseCart }
+export default { addCart, getCartById, addProductToCart, deleteProductFromCart, updateProducts, updateProductQuantity, clearProducts, prePurchaseCart, purchaseCart }

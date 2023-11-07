@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { prePurchaseCart } from '../controllers/carts.js'
 
 const router = Router();
 
@@ -26,6 +27,8 @@ router.get('/products', privateAccess, (req, res) => {
 router.get('/carts/:cid', privateAccess, (req, res) => {
     res.render('cart', {title: 'Carrito', cartId: req.params.cid});
 })
+
+router.get('/purchase/:cid', privateAccess, prePurchaseCart)
 
 router.get('/login', publicAccess, (req, res)=> {
     if (req.session.user) {res.status(301).redirect('/products/')}

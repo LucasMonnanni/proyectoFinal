@@ -1,10 +1,30 @@
 <script src="/static/js/products.js"></script>
-<div id="user"></div>
-<h3>Productos</h3>
-<div id="products">
+<div class="container">
+    <div class="row my-3">
+        <div class="card width-50">
+            <div id="user" class="card-body">
+            </div>
+        </div>
+    </div>
+    <div class="row my-3">
+        <h3>Productos</h3>
+    </div>
+    <div id="products" class="row row-cols-1 row-cols-lg-2 row-cols-xl-3 g-4">
+    </div>
+    <div id="buttons" class="row my-3 justify-content-between">
+        <div class="col-auto">
+            <a class="btn btn-secondary" id="prevPageButton">Página Anterior</a>    
+        </div>
+        <div class="col-auto">
+            <a class="btn btn-secondary" id="nextPageButton">Página Siguiente</a> 
+        </div>
+    </div>
+    <div class="row my-3 justify-content-between">
+        <div class="col-3">
+            <a class="btn btn-secondary" id='cartLink' href="#" disabled>Ver carrito</a>
+        </div>
+        <div class="col-auto">
+            <a class="btn btn-secondary" id="logoutButton">Cerrar Sesión</a>
+        </div>
+    </div>
 </div>
-<button type='button' id="prevPageButton">Página Anterior</button> 
-<button type='button' id="nextPageButton">Página Siguiente</button> 
-<hr>
-<a id='cartLink' href="#" disabled>Ver carrito</a><br>
-<button type='button' id="logoutButton">Cerrar Sesión</button>

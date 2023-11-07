@@ -10,26 +10,40 @@ const renderProducts = (data) => {
     productsDiv.innerHTML = ''
     data.payload.forEach((product)=>{
         const d = document.createElement('div')
-        d.innerHTML = `<p><b>Título: </b> ${product.title}</p>
-        <p><b>Descripción: </b></p>
-        <p>${product.description}</p>
-        <p><b>Precio: </b>${product.price}</p>
-        <p><b>Código: </b>${product.code}</p>
-        <p><b>Categoría: </b>${product.category}</p>
-        <p><b>Stock: </b>${product.stock}</p>
+        d.classList.add(['card'])
+        d.innerHTML = `
+        <div class="card-header">
+            <b>${product.title}</b>
+        </div>`
+        if (product.thumbnails.length) {
+            d.innerHTML += `<img src="${product.thumbnails[0]}" class="card-img-top">`
+        }
+        const body = document.createElement('div')
+        body.classList.add(['card-body'])
+        body.innerHTML = `
+        <p class="card-text"><b>Descripción: </b></p>
+        <p class="card-text">${product.description}</p>
+        <p class="card-text"><b>Precio: </b>${product.price}</p>
+        <p class="card-text"><b>Código: </b>${product.code}</p>
+        <p class="card-text"><b>Categoría: </b>${product.category}</p>
+        <p class="card-text"><b>Stock: </b>${product.stock}</p>
         `
         const addUrl = window.location.origin + '/api/carts/' + document.cartId + '/product/' + product._id
-        const b = document.createElement('button', {type: 'button'})
-        b.type = 'button'
+        const b = document.createElement('a')
+        b.classList.add('btn', 'btn-secondary')
+        b.href = '#'
         b.innerHTML = 'Agregar al carrito'
         b.onclick = async () => {
             const res = await fetch(addUrl, {method:'POST'})
             const data = await res.json()
             console.log(data)
         }
-        d.appendChild(b)
-        d.appendChild(document.createElement('hr'))
-        productsDiv.appendChild(d)
+        body.appendChild(b)
+        d.appendChild(body)
+        const c = document.createElement('div')
+        c.classList.add('col')
+        c.appendChild(d)
+        productsDiv.appendChild(c)
     });
     
     const prevPageButton = document.getElementById('prevPageButton');
@@ -39,9 +53,9 @@ const renderProducts = (data) => {
             const productData = await getProducts(data.prevLink)
             renderProducts(productData)
         }
-        prevPageButton.disabled = false
+        prevPageButton.classList.remove('disabled')
     } else {
-        prevPageButton.disabled = true
+        prevPageButton.classList.add('disabled')
         prevPageButton.onclick = () =>{}
     }
     if (data.hasNextPage) {
@@ -49,9 +63,9 @@ const renderProducts = (data) => {
             const productData = await getProducts(data.nextLink)
             renderProducts(productData)
         }
-        nextPageButton.disabled = false
+        nextPageButton.classList.remove('disabled')
     } else {
-        nextPageButton.disabled = true
+        nextPageButton.classList.add('disabled')
         nextPageButton.onclick = () =>{}
     }
 }
@@ -70,11 +84,10 @@ const getUserData = async () => {
 
 const renderUser = (data) => {
     const userDiv = document.getElementById('user');
-    userDiv.innerHTML = `<h4>Bienvenido ${data.firstName || '' } ${data.lastName || ''}!</h4>\n`
-    data.email ? userDiv.innerHTML += `<p>Email: ${data.email} </p>` : false
-    data.age ? userDiv.innerHTML += `<p>Edad: ${data.age}</p>` : false
-    data.role ? userDiv.innerHTML += `<p>Rol: ${data.role}</p>` : false
-
+    userDiv.innerHTML = `<h4 class="card-title">Bienvenido ${data.firstName || '' } ${data.lastName || ''}!</h4>\n`
+    data.email ? userDiv.innerHTML += `<p class="card-text">Email: ${data.email} </p>` : false
+    data.age ? userDiv.innerHTML += `<p class="card-text">Edad: ${data.age}</p>` : false
+    data.role ? userDiv.innerHTML += `<p class="card-text">Rol: ${data.role}</p>` : false
     document.getElementById('cartLink').href = `/carts/${data.cart}`
 }
 
@@ -91,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async () =>{
     }
 
     let params = {
-        limit: 3,
+        limit: 6,
         page: 1,
         sort: 'asc'
     }

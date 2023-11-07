@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="row my-3">
+        <h2>Carrito</h2>
+    </div>
+    <div id="products" class="row row-cols-1 row-cols-lg-2 row-cols-xl-3 g-4">
+            {{#each items}}
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <b> {{this.product.title}}</b>
+                    </div>
+                    {{#if this.product.thumbnails}}<img src="{{item.product.thumbnails.[0]}}" class="card-img-top"> {{/if}}
+                    <div class="card-body">
+                        <p><b>Título: </b> {{this.product.title}}</p>
+                        <p><b>Precio: </b>{{this.product.price}}</p>
+                        <p><b>Cantidad: </b>{{this.quantity}}</p>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+    </div>
+    <div id="buttons" class="row my-3">
+        <a class="btn btn-secondary" id="purchaseButton">Finalizar compra</a> 
+    </div>
+</div>
+
+<script>
+    const purchase = async () => {
+        const response = await (await fetch(url + '/purchase', {
+            method: 'POST'
+        })).json()
+        console.log(response)
+        if (response.status == 'Success') {
+            await getProducts(url)
+        }
+    }
+    document.getElementById('purchaseButton').addEventListener('click', purchase)
+</script>
